@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
   * {
-    margin: 0;
+    margin: 3;
     padding: 0;
     box-sizing: border-box;
     display:'flex '
@@ -11,6 +11,6 @@ export const GlobalStyle = createGlobalStyle`
   body {
     font-family: Arial, sans-serif; 
     background-color: #121214; 
-    color: #333; 
+    color: #333;
   }
 `;
