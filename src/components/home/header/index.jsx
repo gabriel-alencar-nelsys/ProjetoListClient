@@ -12,7 +12,7 @@ export const Header = () => {
           justifyContent: "space-between",
           height: 233,
           width: 50,
-          maxHeight: { xs: 30, md: 10 },
+          maxHeight: { xs: 30, md: 30 },
           maxWidth: { xs: 100, md: 250 },
         }}
         alt=""
@@ -27,8 +27,8 @@ export const Header = () => {
               justifyContent: "space-between",
               height: 233,
               width: 50,
-              maxHeight: { xs: 100, md: 10 },
-              maxWidth: { xs: 50, md: 10 },
+              maxHeight: { xs: 100, md: 40 },
+              maxWidth: { xs: 50, md: 250 },
               transition:"transform 0.3s ease",
               "&:hover": {
                 transform:'scale(1.2)',

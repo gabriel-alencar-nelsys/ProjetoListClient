@@ -1,7 +1,5 @@
-"use client";
-
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Box, Button, MenuItem, Popover, TextField } from "@mui/material";
 import { Header } from "@/components/home/header";
 import { GlobalStyle } from "../styles/global";
@@ -15,84 +13,71 @@ import {
 import DataTable from "@/components/defaultTable";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-const handleChange = (event) => {
-  event.target.value;
-};
-
-const data = {
-  clientes: [
-    {
-      id: 1,
-      nome: "João Silva",
-      email: "joao.silva@exemplo.com",
-      telefone: "1234-5678",
-      pedidos: [
-        {
-          id: 101,
-          data: "2024-09-01",
-          valor: 150.75,
-          itens: [
-            {
-              produto: "Produto A",
-              quantidade: 2,
-              preco: 29.99,
-            },
-            {
-              produto: "Produto B",
-              quantidade: 1,
-              preco: 49.99,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 2,
-      nome: "Maria Oliveira",
-      email: "maria.oliveira@exemplo.com",
-      telefone: "9876-5432",
-      pedidos: [
-        {
-          id: 201,
-          data: "2024-09-10",
-          valor: 200,
-          itens: [
-            {
-              produto: "Produto A",
-              quantidade: 1,
-              preco: 29.99,
-            },
-            {
-              produto: "Produto D",
-              quantidade: 4,
-              preco: 40,
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
-
 export default function Story() {
   const [nome, setNome] = useState("");
-  const [filteredData, setfilteredData] = useState([]);
-  const [anchorEL, setanchorEL] = useState(null);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [anchorEL, setAnchorEL] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState("");
+
+  const columns = [
+    { key: "nome", label: "Nome" },
+    { key: "email", label: "Email" },
+    { key: "telefone", label: "Telefone" },
+    { key: "produto", label: "Produto" },
+    { key: "quantidade", label: "Quantidade" },
+    { key: "preco", label: "Preço" },
+    { key: "data", label: "Data do Pedido" },
+  ];
+
+  useEffect(() => {
+    axios
+      .get("http://assets.nelsys.vps-kinghost.net/json5.json")
+      .then((response) => {
+        console.log("Dados recebidos:", response.data); 
+        setData(response.data.clientes);
+        setFilteredData(response.data.clientes);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar os dados:", error);
+      });
+  }, []);
 
   const handleClick = (event) => {
-    setanchorEL(event.currentTarget);
+    setAnchorEL(event.currentTarget);
   };
+
   const handleClose = () => {
-    setanchorEL(null);
+    setAnchorEL(null);
+  };
+
+  const handleProductSelect = (produto) => {
+    setSelectedProduct(produto);
+    handleClose();
   };
 
   const open = Boolean(anchorEL);
 
+  const uniqueProducts = Array.from(
+    new Set(
+      data.flatMap((cliente) =>
+        cliente.pedidos.flatMap((pedido) =>
+          pedido.itens.map((item) => item.produto)
+        )
+      )
+    )
+  );
+
   const handlePesquisar = () => {
-    const filtered = data.clientes.filter((cliente) =>
-      cliente.nome.toLowerCase().includes(nome.toLowerCase())
-    );
-    setfilteredData(filtered);
+    let filtered = data;
+
+    if (nome) {
+      filtered = filtered.filter((cliente) =>
+        cliente.nome.toLowerCase().includes(nome.toLowerCase())
+      );
+    }
+
+    setFilteredData(filtered);
   };
 
   return (
@@ -113,13 +98,39 @@ export default function Story() {
         </Typography>
       </Stack>
       <Divider />
-      <Stack>
+      <Stack
+        spacing={2}
+        direction={"row"}
+        justifyContent="space-between"
+        sx={{ width: "100%" }}
+      >
         <Typography
           sx={{ color: "#00B37E", fontSize: "14px", fontWeight: "bold" }}
         >
           Filtros:
         </Typography>
+        <Button
+          sx={{
+            background: "#2b5fc0",
+            fontSize: "12px",
+            fontWeight: "bold",
+            borderRadius: "12px",
+            "&:hover": {
+              background: "#0942ad",
+            },
+            width: {
+              md: "40%",
+              xs: "30%",
+            },
+          }}
+          onClick={handlePesquisar}
+          variant="contained"
+          aria-label="Adicionar filtro"
+        >
+          Adicionar
+        </Button>
       </Stack>
+
       <Divider />
       <Stack sx={{ color: "white", flexDirection: "row", gap: 0.5 }}>
         <FormControl fullWidth>
@@ -134,25 +145,54 @@ export default function Story() {
               sx: {
                 color: "white",
                 fontSize: "12px",
-
                 background: "#323238",
                 border: "1px solid white",
                 borderRadius: "12px",
                 "&:hover": {
                   background: "#171718",
                 },
+                width: {
+                  xs: "100%",
+                  md: "70%",
+                },
               },
             }}
           />
         </FormControl>
-        <Box
+        <FormControl fullWidth>
+          <InputLabel sx={{ color: "white", fontSize: "12px" }}></InputLabel>
+          <TextField
+            variant="outlined"
+            onChange={(e) => setNome(e.target.value)}
+            value={nome}
+            label="ID"
+            InputLabelProps={{ style: { color: "white", fontSize: "12px" } }}
+            InputProps={{
+              sx: {
+                color: "white",
+                fontSize: "12px",
+                background: "#323238",
+                border: "1px solid white",
+                borderRadius: "12px",
+                "&:hover": {
+                  background: "#171718",
+                },
+                width: {
+                  xs: "100%",
+                  md: "70%",
+                },
+              },
+            }}
+          />
+        </FormControl>
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             width: 50,
-            maxHeight: { xs: 100, md: 10 },
-            maxWidth: { xs: 50, md: 10 },
+            maxHeight: { xs: 100, md: 40 },
+            maxWidth: { xs: 50, md: 40 },
             color: "white",
           }}
           onClick={handleClick}
@@ -168,10 +208,15 @@ export default function Story() {
             horizontal: "center",
           }}
         >
-          <MenuItem onClick={handleClose}>Opção 1</MenuItem>
-          <MenuItem onClick={handleClose}>Opção 2</MenuItem>
-          <MenuItem onClick={handleClose}>Opção 3</MenuItem>
-        </Popover>
+          {uniqueProducts.map((produto) => (
+            <MenuItem
+              key={produto}
+              onClick={() => handleProductSelect(produto)}
+            >
+              {produto}
+            </MenuItem>
+          ))}
+        </Popover> */}
         <Button
           sx={{
             background: "#087a58",
@@ -181,6 +226,9 @@ export default function Story() {
             "&:hover": {
               background: "#024d36",
             },
+            width: {
+              md: "40%",
+            },
           }}
           onClick={handlePesquisar}
           variant="contained"
@@ -189,7 +237,16 @@ export default function Story() {
         </Button>
       </Stack>
       <Stack>
-        <DataTable />
+        <DataTable
+          table={filteredData}
+          columns={columns}
+          columnVisibility={{
+            showEmail: true,
+            showTelefone: true,
+            showPreco: true,
+            showData: true,
+          }}
+        />
       </Stack>
     </Stack>
   );

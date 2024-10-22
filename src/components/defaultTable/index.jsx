@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@mui/material";
 
-const DataTable = ({ data }) => {
+const DataTable = ({ table = [], columns = [], columnVisibility = {} }) => {
   return (
     <TableContainer
       sx={{
@@ -21,67 +21,62 @@ const DataTable = ({ data }) => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell
-              sx={{ color: "white", fontSize: "16px", fontWeight: "bold" }}
-            >
-              Nome
-            </TableCell>
-            <TableCell
-              sx={{ color: "white", fontSize: "16px", fontWeight: "bold" }}
-            >
-              Email
-            </TableCell>
-            <TableCell
-              sx={{ color: "white", fontSize: "16px", fontWeight: "bold" }}
-            >
-              Telefone
-            </TableCell>
-            <TableCell
-              sx={{ color: "white", fontSize: "16px", fontWeight: "bold" }}
-            >
-              Produto
-            </TableCell>
-            <TableCell
-              sx={{ color: "white", fontSize: "16px", fontWeight: "bold" }}
-            >
-              Quantidade
-            </TableCell>
-            <TableCell
-              sx={{ color: "white", fontSize: "16px", fontWeight: "bold" }}
-            >
-              Preço
-            </TableCell>
-            <TableCell sx={{ color: "white", fontSize: "16px" }}>
-              Data do Pedido
-            </TableCell>
+            {columns.map((column) => (
+              <TableCell
+                key={column.key}
+                sx={{ color: "white", fontSize: "16px", fontWeight: "bold" }}
+              >
+                {column.label}
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.clientes.map((cliente) =>
+          {table.map((cliente) =>
             cliente.pedidos.map((pedido) =>
               pedido.itens.map((item) => (
-                <TableRow key={pedido.id}>
+                <TableRow key={item.id}>
                   <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
                     {cliente.nome}
                   </TableCell>
-                  <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
-                    {cliente.email}
-                  </TableCell>
-                  <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
-                    {cliente.telefone}
-                  </TableCell>
+                  {columnVisibility.showEmail && (
+                    <TableCell
+                      sx={{ backgroundColor: "#323238", color: "#FFF" }}
+                    >
+                      {cliente.email}
+                    </TableCell>
+                  )}
+
+                  {columnVisibility.showTelefone && (
+                    <TableCell
+                      sx={{ backgroundColor: "#323238", color: "#FFF" }}
+                    >
+                      {cliente.telefone}
+                    </TableCell>
+                  )}
+
                   <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
                     {item.produto}
                   </TableCell>
                   <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
                     {item.quantidade}
                   </TableCell>
-                  <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
-                    {item.preco}
-                  </TableCell>
-                  <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
-                    {pedido.data}
-                  </TableCell>
+
+                  {columnVisibility.showPreco && (
+                    <TableCell
+                      sx={{ backgroundColor: "#323238", color: "#FFF" }}
+                    >
+                      {item.preco}
+                    </TableCell>
+                  )}
+
+                  {columnVisibility.showData && (
+                    <TableCell
+                      sx={{ backgroundColor: "#323238", color: "#FFF" }}
+                    >
+                      {pedido.data}
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
             )
