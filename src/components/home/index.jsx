@@ -29,10 +29,11 @@ export const Initial = () => {
   }, []);
 
   const columnVisibility = {
-    showEmail: false, 
-    showTelefone: false, 
+    showEmail: false,
+    showTelefone: false,
     showPreco: false,
     showData: false,
+    showNome: true,
   };
 
   return (
@@ -55,7 +56,12 @@ export const Initial = () => {
           <Divider />
         </Stack>
         <Stack>
-          <DataTable table={filteredData} columns={columns} columnVisibility={columnVisibility}/>
+          <DataTable
+            table={filteredData}
+            columns={columns}
+            columnVisibility={columnVisibility}
+            showEditIcon={false}
+          />
         </Stack>
       </Stack>
     </>

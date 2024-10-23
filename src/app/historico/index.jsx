@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import DataTable from "@/components/defaultTable";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { EditIconButton } from "@/components/edit";
+import { AddForm } from "./form";
 
 export default function Story() {
   const [nome, setNome] = useState("");
@@ -19,8 +21,11 @@ export default function Story() {
   const [filteredData, setFilteredData] = useState([]);
   const [anchorEL, setAnchorEL] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState("");
+  const [produto, setProduto] = useState("");
+  const [isopen, setIsOpen] = useState(false);
 
   const columns = [
+    { key: "Id", label: "Id" },
     { key: "nome", label: "Nome" },
     { key: "email", label: "Email" },
     { key: "telefone", label: "Telefone" },
@@ -28,13 +33,21 @@ export default function Story() {
     { key: "quantidade", label: "Quantidade" },
     { key: "preco", label: "Preço" },
     { key: "data", label: "Data do Pedido" },
+    {
+      label: "Editar",
+      render: (row) => <EditIconButton onClick={() => handleEdit(row)} />,
+    },
   ];
+
+  function handleOpen() {
+    setIsOpen(!isopen);
+  }
 
   useEffect(() => {
     axios
       .get("http://assets.nelsys.vps-kinghost.net/json5.json")
       .then((response) => {
-        console.log("Dados recebidos:", response.data); 
+        console.log("Dados recebidos:", response.data);
         setData(response.data.clientes);
         setFilteredData(response.data.clientes);
       })
@@ -58,22 +71,48 @@ export default function Story() {
 
   const open = Boolean(anchorEL);
 
-  const uniqueProducts = Array.from(
-    new Set(
-      data.flatMap((cliente) =>
-        cliente.pedidos.flatMap((pedido) =>
-          pedido.itens.map((item) => item.produto)
-        )
-      )
-    )
-  );
+  const columnVisibility = {
+    showEmail: true,
+    showTelefone: true,
+    showPreco: true,
+    showData: true,
+    showNome: true,
+  };
+
+  const handleSave = (formData) => {
+    console.log("Dados salvos:", formData);
+    setData([...data, formData]);
+    setFilteredData([...filteredData, formData]);
+    handleClose();
+  };
+
+  // const uniqueProducts = Array.from(
+  //   new Set(
+  //     data.map((cliente) =>
+  //       cliente.pedidos.map((pedido) =>
+  //         pedido.itens.map((item) => item.produto)
+  //       )
+  //     )
+  //   )
+  // );
 
   const handlePesquisar = () => {
     let filtered = data;
+    console.log("Dados do data", data);
 
     if (nome) {
       filtered = filtered.filter((cliente) =>
         cliente.nome.toLowerCase().includes(nome.toLowerCase())
+      );
+    }
+
+    if (produto) {
+      filtered = filtered.filter((cliente) =>
+        cliente.pedidos?.some((pedido) =>
+          pedido.itens?.some((item) =>
+            item.produto.toLowerCase().includes(produto.toLowerCase())
+          )
+        )
       );
     }
 
@@ -123,11 +162,11 @@ export default function Story() {
               xs: "30%",
             },
           }}
-          onClick={handlePesquisar}
+          onClick={handleOpen}
           variant="contained"
-          aria-label="Adicionar filtro"
         >
           Adicionar
+          <AddForm open={isopen} onclose={handleClose} onSave={handleSave} />
         </Button>
       </Stack>
 
@@ -163,9 +202,9 @@ export default function Story() {
           <InputLabel sx={{ color: "white", fontSize: "12px" }}></InputLabel>
           <TextField
             variant="outlined"
-            onChange={(e) => setNome(e.target.value)}
-            value={nome}
-            label="ID"
+            onChange={(e) => setProduto(e.target.value)}
+            value={produto}
+            label="Produto"
             InputLabelProps={{ style: { color: "white", fontSize: "12px" } }}
             InputProps={{
               sx: {
@@ -240,12 +279,8 @@ export default function Story() {
         <DataTable
           table={filteredData}
           columns={columns}
-          columnVisibility={{
-            showEmail: true,
-            showTelefone: true,
-            showPreco: true,
-            showData: true,
-          }}
+          columnVisibility={columnVisibility}
+          showEditIcon={true}
         />
       </Stack>
     </Stack>
