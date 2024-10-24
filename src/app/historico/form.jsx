@@ -8,135 +8,128 @@ import {
   DialogTitle,
   Stack,
 } from "@mui/material";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export const AddForm = ({ open, onclose, data, onSave }) => {
+export const AddForm = ({ open, onclose, onSave, data }) => {
   const [formData, setFormData] = useState({
     nome: "",
     email: "",
     telefone: "",
-    // produto: "",
-    // quantidade: "",
-    // preco: "",
-    pedidos:[],
-    // data: new Date().toISOString().split("T")[0], 
+    produto: "",
+    quantidade: "",
+    preco: "",
+    data: new Date().toISOString().split("T")[0],
   });
-
 
   useEffect(() => {
     if (data) {
-      setFormData(data); 
+      setFormData(data);
     } else {
       setFormData({
         nome: "",
         email: "",
         telefone: "",
-        // produto: "",
-        // quantidade: "",
-        pedidos:[]
-        // preco: "",
-        // data: new Date().toISOString().split("T")[0], 
+        produto: "",
+        quantidade: "",
+        preco: "",
+        data: new Date().toISOString().split("T")[0],
       });
     }
-  }, [data]);
-
+  }, [data, open]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [name]: value });
   };
 
-
-  const handleSubmit = () => {
-    if (!formData.nome || !formData.email) {
-      toast.error("Por favor, preencha os campos obrigatórios!");
-      return;
-    }
-
-    toast.success("Dados Salvos com Sucesso!");
+  const handleSubmit = (e) => {
+    e.preventDefault();
     onSave(formData);
-    onclose(); 
+    toast.success("Salvo com sucesso!");
+    setFormData({
+      nome: "",
+      email: "",
+      telefone: "",
+      produto: "",
+      quantidade: "",
+      preco: "",
+      data: new Date().toISOString().split("T")[0],
+    });
   };
 
   return (
     <Dialog open={open} onClose={onclose}>
-      <Stack>
-        <DialogTitle sx={{ fontWeight: "bold" }}>Adicionar Cliente</DialogTitle>
-        <DialogContent>
+      <ToastContainer />
+      <DialogTitle>Adicionar Cliente</DialogTitle>
+      <DialogContent>
+        <Stack spacing={2}>
           <TextField
             name="nome"
             label="Nome"
-            fullWidth
-            margin="normal"
+            variant="outlined"
             value={formData.nome}
             onChange={handleChange}
+            fullWidth
           />
           <TextField
             name="email"
             label="Email"
-            fullWidth
-            margin="normal"
+            variant="outlined"
             value={formData.email}
             onChange={handleChange}
+            fullWidth
           />
           <TextField
             name="telefone"
             label="Telefone"
-            fullWidth
-            margin="normal"
+            variant="outlined"
             value={formData.telefone}
             onChange={handleChange}
+            fullWidth
           />
-          {/* <TextField
+          <TextField
             name="produto"
             label="Produto"
-            fullWidth
-            margin="normal"
+            variant="outlined"
             value={formData.produto}
             onChange={handleChange}
+            fullWidth
           />
           <TextField
             name="quantidade"
             label="Quantidade"
-            fullWidth
-            margin="normal"
-            type="number"
+            variant="outlined"
             value={formData.quantidade}
             onChange={handleChange}
+            fullWidth
           />
           <TextField
             name="preco"
             label="Preço"
-            fullWidth
-            margin="normal"
-            type="number"
+            variant="outlined"
             value={formData.preco}
             onChange={handleChange}
-          /> */}
-          {/* <TextField
-            name="data"
-            label="Data Do Pedido"
-            value={formData.data}
             fullWidth
+          />
+          <TextField
+            name="data"
+            label="Data do Pedido"
             type="date"
-            margin="normal"
+            variant="outlined"
+            value={formData.data}
             onChange={handleChange}
-          /> */}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onclose} color="primary">
-            Cancelar
-          </Button>
-          <Button onClick={handleSubmit} color="primary">
-            Salvar
-          </Button>
-        </DialogActions>
-      </Stack>
-      <ToastContainer />
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+          />
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onclose}>Cancelar</Button>
+        <Button onClick={handleSubmit} variant="contained">
+          Salvar
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

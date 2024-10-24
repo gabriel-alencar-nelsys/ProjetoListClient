@@ -11,7 +11,6 @@ import {
   Grid,
   useMediaQuery,
   useTheme,
-  Stack,
 } from "@mui/material";
 import { EditIconButton } from "../edit";
 
@@ -20,9 +19,10 @@ const DataTable = ({
   columns = [],
   columnVisibility = {},
   showEditIcon,
+  onEdit, 
+  handleDelete
 }) => {
   const theme = useTheme();
-
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
@@ -38,7 +38,7 @@ const DataTable = ({
         <Grid container spacing={2}>
           {table.map((cliente) =>
             cliente?.pedidos.map((pedido) =>
-              pedido.itens.map((item) => (
+              pedido?.itens.map((item) => (
                 <Grid item xs={12} sm={6} md={4} key={item.id}>
                   <Card
                     sx={{
@@ -51,7 +51,7 @@ const DataTable = ({
                       <h4>
                         Cliente: {cliente.nome}
                         <span style={{ marginLeft: "5rem" }}></span>
-                        {showEditIcon && <EditIconButton />}
+                        {showEditIcon && <EditIconButton onEdit={() => onEdit(item)}  onDelete={() => handleDelete(item)}   />}
                       </h4>
                       {columnVisibility.showid && (
                         <p>ID do Pedido: {pedido.id}</p>
@@ -85,12 +85,13 @@ const DataTable = ({
                   {column.label}
                 </TableCell>
               ))}
+              {showEditIcon && <TableCell sx={{ color: "white" }}>Ações</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
             {table.map((cliente) =>
-              cliente.pedidos.map((pedido) =>
-                pedido.itens.map((item) => (
+              cliente?.pedidos.map((pedido) =>
+                pedido?.itens.map((item) => (
                   <TableRow key={item.id}>
                     {columnVisibility.showid && (
                       <TableCell
@@ -142,11 +143,13 @@ const DataTable = ({
                         {pedido.data}
                       </TableCell>
                     )}
-                    <TableCell
-                      sx={{ backgroundColor: "#323238", color: "#FFF" }}
-                    >
-                      <EditIconButton />
-                    </TableCell>
+                    {showEditIcon && (
+                      <TableCell
+                        sx={{ backgroundColor: "#323238", color: "#FFF" }}
+                      >
+                        <EditIconButton onEdit={() => onEdit(item)} /> 
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               )

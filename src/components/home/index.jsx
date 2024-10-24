@@ -5,10 +5,12 @@ import DataTable from "../defaultTable/index";
 import Typography from "@mui/material/Typography";
 import { Divider } from "@mui/material";
 import axios from "axios";
+import { Button } from "@mui/material";
 
 export const Initial = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [loading, setLoading] = useState(true); 
 
   const columns = [
     { label: "Nome", key: "nome" },
@@ -25,6 +27,9 @@ export const Initial = () => {
       })
       .catch((error) => {
         console.error("Erro ao buscar os dados", error);
+      })
+      .finally(() => {
+        setLoading(false); 
       });
   }, []);
 
@@ -38,7 +43,7 @@ export const Initial = () => {
 
   return (
     <>
-      <Stack spacing={3} sx={{ direction: "column" }}>
+      <Stack spacing={3} sx={{ direction: "column", padding: 2 }}>
         <Header />
         <Stack sx={{ display: "flex", justifyContent: "center" }}>
           <Typography
@@ -46,22 +51,31 @@ export const Initial = () => {
               color: "white",
               fontWeight: "bold",
               marginTop: 2,
-              display: "flex",
-              justifyContent: "center",
-              fontSize: "20px",
+              textAlign: "center",
+              fontSize: "24px",
             }}
           >
-            Lista de Clientes:
+            Lista de Clientes
           </Typography>
           <Divider />
         </Stack>
         <Stack>
-          <DataTable
-            table={filteredData}
-            columns={columns}
-            columnVisibility={columnVisibility}
-            showEditIcon={false}
-          />
+          {loading ? (
+            <Typography variant="body1" color="white">
+              Carregando...
+            </Typography>
+          ) : filteredData.length === 0 ? (
+            <Typography variant="body1" color="white">
+              Nenhum cliente encontrado.
+            </Typography>
+          ) : (
+            <DataTable
+              table={filteredData}
+              columns={columns}
+              columnVisibility={columnVisibility}
+              showEditIcon={false}
+            />
+          )}
         </Stack>
       </Stack>
     </>

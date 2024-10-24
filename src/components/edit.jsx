@@ -3,16 +3,18 @@ import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export const EditIconButton = ({ onClick }) => {
+export const EditIconButton = ({ onEdit, onDelete }) => {
   return (
     <>
-      <IconButton 
-      sx={{color:'white'}}
-      onClick={onClick} size="small">
+      <IconButton
+        sx={{ color: "white" }}
+        onClick={onEdit} 
+        size="small"
+      >
         <EditIcon />
       </IconButton>
       <IconButton
-        onClick={onClick}
+        onClick={onDelete} 
         size="small"
         data-testid="DeleteIconButton"
         sx={{ color: "red" }}

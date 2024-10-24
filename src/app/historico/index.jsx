@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Box, Button, MenuItem, Popover, TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { Header } from "@/components/home/header";
 import { GlobalStyle } from "../styles/global";
 import {
@@ -23,6 +23,7 @@ export default function Story() {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [produto, setProduto] = useState("");
   const [isopen, setIsOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState(null);
 
   const columns = [
     { key: "Id", label: "Id" },
@@ -35,7 +36,12 @@ export default function Story() {
     { key: "data", label: "Data do Pedido" },
     {
       label: "Editar",
-      render: (row) => <EditIconButton onClick={() => handleEdit(row)} />,
+      render: (row) => (
+        <EditIconButton
+          onEdit={() => handleEdit(row)}
+          onDelete={() => handleDelete(row.id)}
+        />
+      ),
     },
   ];
 
@@ -47,7 +53,6 @@ export default function Story() {
     axios
       .get("http://assets.nelsys.vps-kinghost.net/json5.json")
       .then((response) => {
-        console.log("Dados recebidos:", response.data);
         setData(response.data.clientes);
         setFilteredData(response.data.clientes);
       })
@@ -79,26 +84,8 @@ export default function Story() {
     showNome: true,
   };
 
-  const handleSave = (formData) => {
-    console.log("Dados salvos:", formData);
-    setData([...data, formData]);
-    setFilteredData([...filteredData, formData]);
-    handleClose();
-  };
-
-  // const uniqueProducts = Array.from(
-  //   new Set(
-  //     data.map((cliente) =>
-  //       cliente.pedidos.map((pedido) =>
-  //         pedido.itens.map((item) => item.produto)
-  //       )
-  //     )
-  //   )
-  // );
-
   const handlePesquisar = () => {
     let filtered = data;
-    console.log("Dados do data", data);
 
     if (nome) {
       filtered = filtered.filter((cliente) =>
@@ -119,6 +106,32 @@ export default function Story() {
     setFilteredData(filtered);
   };
 
+  const handleSave = (formData) => {
+    if (selectedClient) {
+      const updatedData = data.map((cliente) =>
+        cliente.id === formData.id ? formData : cliente
+      );
+      setData(updatedData);
+      setFilteredData(updatedData);
+    } else {
+      setData([...data, formData]);
+      setFilteredData([...filteredData, formData]);
+    }
+    handleClose();
+    setSelectedClient(null);
+  };
+
+  const handleEdit = (cliente) => {
+    setIsOpen(true);
+    setSelectedClient(cliente);
+  };
+
+  const handleDelete = (clientId) => {
+    const updatedData = data.filter((cliente) => cliente.id !== clientId);
+    setData(updatedData);
+    setFilteredData(updatedData);
+  };
+
   return (
     <Stack spacing={1}>
       <GlobalStyle />
@@ -137,17 +150,7 @@ export default function Story() {
         </Typography>
       </Stack>
       <Divider />
-      <Stack
-        spacing={2}
-        direction={"row"}
-        justifyContent="space-between"
-        sx={{ width: "100%" }}
-      >
-        <Typography
-          sx={{ color: "#00B37E", fontSize: "14px", fontWeight: "bold" }}
-        >
-          Filtros:
-        </Typography>
+      <Stack direction='row' justifyContent='flex-end'>
         <Button
           sx={{
             background: "#2b5fc0",
@@ -166,8 +169,28 @@ export default function Story() {
           variant="contained"
         >
           Adicionar
-          <AddForm open={isopen} onclose={handleClose} onSave={handleSave} />
         </Button>
+        <AddForm
+          open={isopen}
+          onclose={() => {
+            setIsOpen(false);
+            setSelectedClient(null);
+          }}
+          onSave={handleSave}
+          data={selectedClient} 
+        />
+      </Stack>
+      <Stack
+        spacing={2}
+        direction={"row"}
+        justifyContent="space-between"
+        sx={{ width: "100%" }}
+      >
+        <Typography
+          sx={{ color: "#00B37E", fontSize: "14px", fontWeight: "bold" }}
+        >
+          Filtros:
+        </Typography>
       </Stack>
 
       <Divider />
@@ -224,38 +247,6 @@ export default function Story() {
             }}
           />
         </FormControl>
-        {/* <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: 50,
-            maxHeight: { xs: 100, md: 40 },
-            maxWidth: { xs: 50, md: 40 },
-            color: "white",
-          }}
-          onClick={handleClick}
-        >
-          <FilterAltIcon />
-        </Box>
-        <Popover
-          open={open}
-          anchorEl={anchorEL}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-        >
-          {uniqueProducts.map((produto) => (
-            <MenuItem
-              key={produto}
-              onClick={() => handleProductSelect(produto)}
-            >
-              {produto}
-            </MenuItem>
-          ))}
-        </Popover> */}
         <Button
           sx={{
             background: "#087a58",
@@ -281,6 +272,8 @@ export default function Story() {
           columns={columns}
           columnVisibility={columnVisibility}
           showEditIcon={true}
+          onEdit={handleEdit}
+          handleDelete={handleDelete}
         />
       </Stack>
     </Stack>
