@@ -59,6 +59,8 @@ export default function Story() {
       .catch((error) => {
         console.error("Erro ao buscar os dados:", error);
       });
+
+      //console.log('data:', data )
   }, []);
 
   const handleClick = (event) => {
