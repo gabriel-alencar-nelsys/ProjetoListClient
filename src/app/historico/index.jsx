@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import DataTable from "@/components/defaultTable";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+
 import { EditIconButton } from "@/components/edit";
 import { AddForm } from "./form";
 
@@ -19,9 +19,8 @@ export default function Story() {
   const [nome, setNome] = useState("");
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [anchorEL, setAnchorEL] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState("");
   const [produto, setProduto] = useState("");
+  const [id, setId] = useState("");
   const [isopen, setIsOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
 
@@ -30,12 +29,9 @@ export default function Story() {
     { key: "nome", label: "Nome" },
     { key: "email", label: "Email" },
     { key: "telefone", label: "Telefone" },
-    { key: "produto", label: "Produto" },
-    { key: "quantidade", label: "Quantidade" },
-    { key: "preco", label: "Preço" },
-    { key: "data", label: "Data do Pedido" },
+
     {
-      label: "Editar",
+      label: "",
       render: (row) => (
         <EditIconButton
           onEdit={() => handleEdit(row)}
@@ -59,24 +55,7 @@ export default function Story() {
       .catch((error) => {
         console.error("Erro ao buscar os dados:", error);
       });
-
-      //console.log('data:', data )
   }, []);
-
-  const handleClick = (event) => {
-    setAnchorEL(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEL(null);
-  };
-
-  const handleProductSelect = (produto) => {
-    setSelectedProduct(produto);
-    handleClose();
-  };
-
-  const open = Boolean(anchorEL);
 
   const columnVisibility = {
     showEmail: true,
@@ -105,6 +84,12 @@ export default function Story() {
       );
     }
 
+    if (id) {
+      filtered = filtered.filter((cliente) =>
+        cliente.pedidos?.some((pedido) => pedido.id.toString() === id)
+      );
+    }
+
     setFilteredData(filtered);
   };
 
@@ -119,11 +104,12 @@ export default function Story() {
       setData([...data, formData]);
       setFilteredData([...filteredData, formData]);
     }
-    handleClose();
+    handleOpen();
     setSelectedClient(null);
   };
 
   const handleEdit = (cliente) => {
+    console.log("Cliente", cliente)
     setIsOpen(true);
     setSelectedClient(cliente);
   };
@@ -152,7 +138,7 @@ export default function Story() {
         </Typography>
       </Stack>
       <Divider />
-      <Stack direction='row' justifyContent='flex-end'>
+      <Stack direction="row" justifyContent="flex-end">
         <Button
           sx={{
             background: "#2b5fc0",
@@ -179,7 +165,7 @@ export default function Story() {
             setSelectedClient(null);
           }}
           onSave={handleSave}
-          data={selectedClient} 
+          data={selectedClient}
         />
       </Stack>
       <Stack
@@ -230,6 +216,32 @@ export default function Story() {
             onChange={(e) => setProduto(e.target.value)}
             value={produto}
             label="Produto"
+            InputLabelProps={{ style: { color: "white", fontSize: "12px" } }}
+            InputProps={{
+              sx: {
+                color: "white",
+                fontSize: "12px",
+                background: "#323238",
+                border: "1px solid white",
+                borderRadius: "12px",
+                "&:hover": {
+                  background: "#171718",
+                },
+                width: {
+                  xs: "100%",
+                  md: "70%",
+                },
+              },
+            }}
+          />
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel sx={{ color: "white", fontSize: "12px" }}></InputLabel>
+          <TextField
+            variant="outlined"
+            onChange={(e) => setId(e.target.value)}
+            value={id}
+            label="ID"
             InputLabelProps={{ style: { color: "white", fontSize: "12px" } }}
             InputProps={{
               sx: {
