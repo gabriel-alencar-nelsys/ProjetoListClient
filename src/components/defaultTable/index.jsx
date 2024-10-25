@@ -11,16 +11,25 @@ import {
   Grid,
   useMediaQuery,
   useTheme,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
-import { EditIconButton } from "../edit";
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  ExpandMore as ExpandMoreIcon,
+  Visibility as VisibilityIcon,
+} from "@mui/icons-material";
+import Link from "next/link"; // Importa Link do Next.js
 
 const DataTable = ({
   table = [],
   columns = [],
   columnVisibility = {},
-  showEditIcon,
-  onEdit, 
-  handleDelete
+  showEditIcon = true,
+  onEdit,
+  handleDelete,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -36,42 +45,58 @@ const DataTable = ({
     >
       {isMobile ? (
         <Grid container spacing={2}>
-          {table.map((cliente) =>
-            cliente?.pedidos.map((pedido) =>
-              pedido?.itens.map((item) => (
-                <Grid item xs={12} sm={6} md={4} key={item.id}>
-                  <Card
-                    sx={{
-                      backgroundColor: "#323238",
-                      color: "#FFF",
-                      borderRadius: "8px",
-                    }}
+          {table.map((cliente) => (
+            <Grid item xs={12} key={cliente.id}>
+              <Card
+                sx={{
+                  backgroundColor: "#323238",
+                  color: "#FFF",
+                  borderRadius: "8px",
+                }}
+              >
+                <CardContent>
+                  <h4
+                    style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <CardContent>
-                      <h4>
-                        Cliente: {cliente.nome}
-                        <span style={{ marginLeft: "5rem" }}></span>
-                        {showEditIcon && <EditIconButton onEdit={() => onEdit(item)}  onDelete={() => handleDelete(item)}   />}
-                      </h4>
-                      {columnVisibility.showid && (
-                        <p>ID do Pedido: {pedido.id}</p>
+                    Cliente: {cliente.nome}
+                    <div>
+                      <Link href={`/historico/detalhes/${cliente.id}`} passHref>
+                        <VisibilityIcon
+                          style={{ cursor: "pointer", marginRight: "8px" }}
+                        />
+                      </Link>
+                      {onEdit && (
+                        <EditIcon
+                          onClick={() => onEdit(cliente)}
+                          style={{ cursor: "pointer", marginRight: "8px" }}
+                        />
                       )}
+                      {handleDelete && (
+                        <DeleteIcon
+                          onClick={() => handleDelete(cliente)}
+                          style={{ cursor: "pointer" }}
+                        />
+                      )}
+                    </div>
+                  </h4>
+                  <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <span>Ver Detalhes</span>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      {columnVisibility.showid && <p>ID: {cliente.id}</p>}
                       {columnVisibility.showEmail && (
                         <p>Email: {cliente.email}</p>
                       )}
                       {columnVisibility.showTelefone && (
                         <p>Telefone: {cliente.telefone}</p>
                       )}
-                      <p>Produto: {item.produto}</p>
-                      <p>Quantidade: {item.quantidade}</p>
-                      {columnVisibility.showPreco && <p>Preço: {item.preco}</p>}
-                      {columnVisibility.showData && <p>Data: {pedido.data}</p>}
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))
-            )
-          )}
+                    </AccordionDetails>
+                  </Accordion>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
       ) : (
         <Table>
@@ -85,75 +110,46 @@ const DataTable = ({
                   {column.label}
                 </TableCell>
               ))}
-              {showEditIcon && <TableCell sx={{ color: "white" }}>Ações</TableCell>}
+              {showEditIcon && (
+                <TableCell sx={{ color: "white" }}>Ações</TableCell>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
-            {table.map((cliente) =>
-              cliente?.pedidos.map((pedido) =>
-                pedido?.itens.map((item) => (
-                  <TableRow key={item.id}>
-                    {columnVisibility.showid && (
-                      <TableCell
-                        sx={{ backgroundColor: "#323238", color: "#FFF" }}
-                      >
-                        {pedido.id}
-                      </TableCell>
-                    )}
-                    <TableCell
-                      sx={{ backgroundColor: "#323238", color: "#FFF" }}
-                    >
-                      {cliente.nome}
-                    </TableCell>
-                    {columnVisibility.showEmail && (
-                      <TableCell
-                        sx={{ backgroundColor: "#323238", color: "#FFF" }}
-                      >
-                        {cliente.email}
-                      </TableCell>
-                    )}
-                    {columnVisibility.showTelefone && (
-                      <TableCell
-                        sx={{ backgroundColor: "#323238", color: "#FFF" }}
-                      >
-                        {cliente.telefone}
-                      </TableCell>
-                    )}
-                    <TableCell
-                      sx={{ backgroundColor: "#323238", color: "#FFF" }}
-                    >
-                      {item.produto}
-                    </TableCell>
-                    <TableCell
-                      sx={{ backgroundColor: "#323238", color: "#FFF" }}
-                    >
-                      {item.quantidade}
-                    </TableCell>
-                    {columnVisibility.showPreco && (
-                      <TableCell
-                        sx={{ backgroundColor: "#323238", color: "#FFF" }}
-                      >
-                        {item.preco}
-                      </TableCell>
-                    )}
-                    {columnVisibility.showData && (
-                      <TableCell
-                        sx={{ backgroundColor: "#323238", color: "#FFF" }}
-                      >
-                        {pedido.data}
-                      </TableCell>
-                    )}
-                    {showEditIcon && (
-                      <TableCell
-                        sx={{ backgroundColor: "#323238", color: "#FFF" }}
-                      >
-                        <EditIconButton onEdit={() => onEdit(item)} /> 
-                      </TableCell>
-                    )}
-                  </TableRow>
-                ))
-              )
-            )}
+            {table.map((cliente) => (
+              <TableRow key={cliente.id}>
+                <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
+                  {cliente.nome}
+                </TableCell>
+                {columnVisibility.showEmail && (
+                  <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
+                    {cliente.email}
+                  </TableCell>
+                )}
+                {columnVisibility.showTelefone && (
+                  <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
+                    {cliente.telefone}
+                  </TableCell>
+                )}
+                {showEditIcon && (
+                  <TableCell sx={{ backgroundColor: "#323238", color: "#FFF" }}>
+                    <Link href={`/historico/detalhes/${cliente.id}`} passHref>
+                      <VisibilityIcon
+                        style={{ cursor: "pointer", marginRight: "8px" }}
+                      />
+                    </Link>
+                    <EditIcon
+                      onClick={() => onEdit(cliente)}
+                      style={{ cursor: "pointer", marginRight: "8px" }}
+                    />
+                    <DeleteIcon
+                      onClick={() => handleDelete(cliente)}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       )}
