@@ -119,7 +119,7 @@ const Detalhes = () => {
         }}
       />
 
-      <Typography variant="h5" align="center" sx={{ color: "white", background:"#05a379", borderRadius:"10px" }}>
+      <Typography variant="h5" align="center" sx={{ color: "white", background:"#035039", borderRadius:"10px" }}>
         Detalhes do Pedido
       </Typography>
 

@@ -124,19 +124,28 @@ export default function Story() {
     <Stack spacing={1}>
       <GlobalStyle />
       <Header />
-      <Stack>
-        <Typography
+      <Stack
           sx={{
-            color: "white",
-            fontSize: "20px",
             display: "flex",
             justifyContent: "center",
-            fontWeight: "bold",
+            alignItems: "center",
           }}
         >
-          Dados Gerais
-        </Typography>
-      </Stack>
+          <Typography
+            sx={{
+              color: "white",
+              fontWeight: "bold",
+              fontSize: "24px",
+              background: "#035039",
+              display: "inline-block",
+              borderRadius: "10px",
+              padding: "4px 8px", 
+            }}
+          >
+            Dados Gerais
+          </Typography>
+          <Divider />
+        </Stack>
       <Divider />
       <Stack direction="row" justifyContent="flex-end">
         <Button

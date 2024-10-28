@@ -22,6 +22,7 @@ import {
   Visibility as VisibilityIcon,
 } from "@mui/icons-material";
 import Link from "next/link";
+import Margin from "@mui/icons-material/Margin";
 
 const DataTable = ({
   table = [],
@@ -53,7 +54,7 @@ const DataTable = ({
 
   const ClienteCard = ({ cliente }) => (
     <Grid item xs={12} key={cliente.id}>
-      <Card sx={cardStyles}>
+      <Card    sx={{...cardStyles,}}>
         <CardContent>
           <h4 style={headerStyle}>
             Cliente: {cliente.nome}
@@ -131,7 +132,7 @@ const cardStyles = {
 const headerStyle = { display: "flex", justifyContent: "space-between" };
 const iconStyle = { cursor: "pointer", marginRight: "8px", color: "#FFF" };
 const tableContainerStyle = {
-  background: "#323238",
+  background: "#252527",
   borderRadius: "12px",
   color: "black",
   fontWeight: "bold",

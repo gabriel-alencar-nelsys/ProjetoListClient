@@ -84,14 +84,22 @@ export const Initial = () => {
         <Header />
       </Stack>
       <Stack spacing={3} sx={{ direction: "column", padding: 2 }}>
-        <Stack sx={{ display: "flex", justifyContent: "center" }}>
+        <Stack
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Typography
             sx={{
               color: "white",
               fontWeight: "bold",
-              marginTop: 2,
-              textAlign: "center",
               fontSize: "24px",
+              background: "#035039",
+              display: "inline-block",
+              borderRadius: "10px",
+              padding: "4px 8px",
             }}
           >
             Dashboard:
@@ -107,7 +115,11 @@ export const Initial = () => {
         >
           <Grid item xs={6} sm={3}>
             <Card
-              sx={{ backgroundColor: "#323238", color: "#00B37E", height: "100%" }}
+              sx={{
+                backgroundColor: "#323238",
+                color: "#00B37E",
+                height: "100%",
+              }}
             >
               <CardContent>
                 <Typography variant="h6" align="center">
@@ -121,7 +133,11 @@ export const Initial = () => {
           </Grid>
           <Grid item xs={6} sm={3}>
             <Card
-              sx={{ backgroundColor: "#323238", color: "#00B37E", height: "100%" }}
+              sx={{
+                backgroundColor: "#323238",
+                color: "#00B37E",
+                height: "100%",
+              }}
             >
               <CardContent>
                 <Typography variant="h6" align="center">
@@ -135,7 +151,11 @@ export const Initial = () => {
           </Grid>
           <Grid item xs={6} sm={3}>
             <Card
-              sx={{ backgroundColor: "#323238", color: "#00B37E", height: "100%" }}
+              sx={{
+                backgroundColor: "#323238",
+                color: "#00B37E",
+                height: "100%",
+              }}
             >
               <CardContent>
                 <Typography variant="h6" align="center">
@@ -149,7 +169,11 @@ export const Initial = () => {
           </Grid>
           <Grid item xs={6} sm={3}>
             <Card
-              sx={{ backgroundColor: "#323238", color: "#00B37E", height: "100%" }}
+              sx={{
+                backgroundColor: "#323238",
+                color: "#00B37E",
+                height: "100%",
+              }}
             >
               <CardContent>
                 <Typography variant="h6" align="center">
@@ -174,9 +198,8 @@ export const Initial = () => {
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={clientesCompras}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis color="white" dataKey="nome" />
-              <YAxis />
-              <Tooltip />
+              <XAxis dataKey="nome" tick={{ fill: "white" }} />{" "}
+              <YAxis tick={{ fill: "white" }} /> <Tooltip />
               <Legend />
               <Line type="monotone" dataKey="totalComprado" stroke="#82ca9d" />
             </LineChart>
