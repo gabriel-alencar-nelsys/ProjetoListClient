@@ -80,8 +80,10 @@ export const Initial = () => {
 
   return (
     <>
-      <Stack spacing={3} sx={{ direction: "column", padding: 2 }}>
+      <Stack>
         <Header />
+      </Stack>
+      <Stack spacing={3} sx={{ direction: "column", padding: 2 }}>
         <Stack sx={{ display: "flex", justifyContent: "center" }}>
           <Typography
             sx={{
@@ -97,9 +99,16 @@ export const Initial = () => {
           <Divider />
         </Stack>
 
-        <Grid container spacing={2} justifyContent="center" sx={{ marginBottom: 2 }}>
+        <Grid
+          container
+          spacing={2}
+          justifyContent="center"
+          sx={{ marginBottom: 2 }}
+        >
           <Grid item xs={6} sm={3}>
-            <Card sx={{ backgroundColor: "#323238", color: "#FFF", height: "100%" }}>
+            <Card
+              sx={{ backgroundColor: "#323238", color: "#00B37E", height: "100%" }}
+            >
               <CardContent>
                 <Typography variant="h6" align="center">
                   Clientes
@@ -111,7 +120,9 @@ export const Initial = () => {
             </Card>
           </Grid>
           <Grid item xs={6} sm={3}>
-            <Card sx={{ backgroundColor: "#323238", color: "#FFF", height: "100%" }}>
+            <Card
+              sx={{ backgroundColor: "#323238", color: "#00B37E", height: "100%" }}
+            >
               <CardContent>
                 <Typography variant="h6" align="center">
                   Pedidos
@@ -123,7 +134,9 @@ export const Initial = () => {
             </Card>
           </Grid>
           <Grid item xs={6} sm={3}>
-            <Card sx={{ backgroundColor: "#323238", color: "#FFF", height: "100%" }}>
+            <Card
+              sx={{ backgroundColor: "#323238", color: "#00B37E", height: "100%" }}
+            >
               <CardContent>
                 <Typography variant="h6" align="center">
                   Quantidade
@@ -135,7 +148,9 @@ export const Initial = () => {
             </Card>
           </Grid>
           <Grid item xs={6} sm={3}>
-            <Card sx={{ backgroundColor: "#323238", color: "#FFF", height: "100%" }}>
+            <Card
+              sx={{ backgroundColor: "#323238", color: "#00B37E", height: "100%" }}
+            >
               <CardContent>
                 <Typography variant="h6" align="center">
                   Valor Total
@@ -149,7 +164,11 @@ export const Initial = () => {
         </Grid>
 
         <Stack sx={{ marginTop: 3 }}>
-          <Typography variant="h6" align="center" sx={{ color: "white", marginBottom: 2 }}>
+          <Typography
+            variant="h6"
+            align="center"
+            sx={{ color: "white", marginBottom: 2 }}
+          >
             Total Comprado por Cliente
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
@@ -164,8 +183,19 @@ export const Initial = () => {
           </ResponsiveContainer>
         </Stack>
 
-        <Stack sx={{ marginTop: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <Typography variant="h6" align="center" sx={{ color: "white", marginBottom: 2 }}>
+        <Stack
+          sx={{
+            marginTop: 3,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="h6"
+            align="center"
+            sx={{ color: "white", marginBottom: 2 }}
+          >
             Produtos Comprados
           </Typography>
           <Stack
@@ -179,7 +209,9 @@ export const Initial = () => {
             }}
           >
             {produtosUnicos.length === 0 ? (
-              <Typography variant="body1">Nenhum produto encontrado.</Typography>
+              <Typography variant="body1">
+                Nenhum produto encontrado.
+              </Typography>
             ) : (
               produtosUnicos.map((produto, index) => (
                 <Typography key={index} variant="body1">
@@ -193,4 +225,3 @@ export const Initial = () => {
     </>
   );
 };
-

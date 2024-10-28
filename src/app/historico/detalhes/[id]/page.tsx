@@ -9,7 +9,6 @@ import {
   Grid,
   Avatar,
   Divider,
-  CircularProgress,
   Box,
   Accordion,
   AccordionSummary,
@@ -29,7 +28,7 @@ import { GlobalStyle } from "@/app/styles/global";
 const Detalhes = () => {
   const { id } = useParams();
   const router = useRouter();
-  const theme = useTheme(); 
+  const theme = useTheme();
   const [cliente, setCliente] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -70,9 +69,9 @@ const Detalhes = () => {
   const formatCurrency = (value) =>
     value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-  if (loading) {
+   if (loading) {
     return (
-      <Box display="flex" flexDirection="column" alignItems="center" height="100vh" padding={2}>
+      <Box display="flex" flexDirection="column" alignItems="center" padding={2}>
         <Skeleton variant="rectangular" width={300} height={150} />
         <Skeleton variant="text" width={200} sx={{ marginTop: 2 }} />
         <Skeleton variant="circular" width={40} height={40} sx={{ marginTop: 2 }} />
@@ -98,7 +97,7 @@ const Detalhes = () => {
   }
 
   return (
-    <Box sx={{ padding: 2 }}>
+    <Box sx={{ padding: { xs: 2, sm: 3, md: 5 }, margin: "0 auto", maxWidth: { md: "60%", lg: "50%", xl: "40%" } }}>
       <GlobalStyle />
       <IconButton
         onClick={() => router.back()}
@@ -106,27 +105,26 @@ const Detalhes = () => {
       >
         <ArrowBackIcon />
       </IconButton>
+
       <Box
         component="img"
+        src="/order.svg"
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          height: 233,
+          height: { xs: 100, md: 300 },
           width: "100%",
           transition: "transform 0.3s ease",
           "&:hover": {
-            transform: "scale(1.2)",
+            transform: { xs: "scale(1.2)", md: "none" },
           },
         }}
-        src="/order.svg"
       />
 
-      <Typography variant="h5" align="center" sx={{ color: "white" }}>
+      <Typography variant="h5" align="center" sx={{ color: "white", background:"#05a379", borderRadius:"10px" }}>
         Detalhes do Pedido
       </Typography>
 
       <Grid container spacing={3} justifyContent="center" marginTop={2}>
-        <Grid item xs={12} sm={8} md={6}>
+        <Grid item xs={12} sm={8} md={6} lg={5} xl={4}>
           <Card sx={{ padding: 3, borderRadius: 15 }}>
             <CardContent>
               <Box display="flex" alignItems="center" mb={3}>
@@ -139,7 +137,7 @@ const Detalhes = () => {
               </Box>
               <Divider />
 
-              <Accordion>
+              <Accordion sx={{ maxWidth: "600px", margin: "0 auto", marginBottom: 2 }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1-content"
@@ -158,44 +156,62 @@ const Detalhes = () => {
                 </AccordionDetails>
               </Accordion>
 
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel2-content"
-                  id="panel2-header"
-                >
-                  <Typography fontWeight={"bold"} variant="h6">
-                    Pedidos Realizados
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <List>
-                    {cliente?.pedidos?.map((pedido) => (
-                      <ListItem key={pedido.id} sx={{ borderBottom: "1px solid #ccc", paddingBottom: 2 }}>
-                        <ListItemText
-                          primary={`Pedido ID: ${pedido.id}`}
-                          secondary={`Data: ${formatDate(pedido.data)} | Valor: ${formatCurrency(
-                            pedido.valor
-                          )}`}
-                        />
-                        <List sx={{ marginTop: 1 }}>
-                          {pedido.itens?.map((item) => (
-                            <ListItem key={item.produto}>
-                              <ListItemText
-                                primary={`${item.quantidade} x ${item.produto} (${formatCurrency(
-                                  item.preco
-                                )})`}
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-                      </ListItem>
-                    ))}
-                  </List>
-                </AccordionDetails>
-              </Accordion>
+              <Accordion sx={{ maxWidth: "600px", margin: "0 auto", marginBottom: 2 }}>
+  <AccordionSummary
+    expandIcon={<ExpandMoreIcon />}
+    aria-controls="panel2-content"
+    id="panel2-header"
+  >
+    <Typography fontWeight={"bold"} variant="h6">
+      Pedidos Realizados
+    </Typography>
+  </AccordionSummary>
+  <AccordionDetails>
+  <List>
+    {cliente?.pedidos?.map((pedido) => {
+      const totalProdutos = pedido.itens.reduce(
+        (acc, item) => acc + item.quantidade * item.preco,
+        0
+      );
 
-              <Accordion>
+      return (
+        <ListItem key={pedido.id} sx={{ borderBottom: "1px solid #ccc", paddingBottom: 2 }}>
+          <ListItemText
+            primary={`Pedido ID: ${pedido.id}`}
+            secondary={`Data: ${formatDate(pedido.data)} | Total dos Produtos: ${formatCurrency(totalProdutos)}`}
+          />
+          <List sx={{ marginTop: 1 }}>
+            {pedido.itens?.map((item) => (
+              <ListItem key={item.produto}>
+                <ListItemText
+                  primary={`${item.quantidade} x ${item.produto} (${formatCurrency(item.preco)})`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </ListItem>
+      );
+    })}
+
+    <ListItem sx={{ marginTop: 2, borderTop: "2px solid #000", background:"#00B37E" }}>
+      <ListItemText
+        primary="Valor Total Pago:"
+        secondary={formatCurrency(
+          cliente.pedidos.reduce(
+            (acc, pedido) =>
+              acc + pedido.itens.reduce((accItem, item) => accItem + item.quantidade * item.preco, 0),
+            0
+          )
+        )}
+        sx={{ fontWeight: "bold" }}
+      />
+    </ListItem>
+  </List>
+</AccordionDetails>
+</Accordion>
+
+
+              <Accordion sx={{ maxWidth: "600px", margin: "0 auto", marginBottom: 2 }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel3-content"
