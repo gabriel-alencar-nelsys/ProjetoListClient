@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, TextField } from "@mui/material";
+import { Button, Card, TextField } from "@mui/material";
 import { Header } from "@/components/home/header";
 import { GlobalStyle } from "../styles/global";
 import {
@@ -29,7 +29,6 @@ export default function Story() {
     { key: "nome", label: "Nome" },
     { key: "email", label: "Email" },
     { key: "telefone", label: "Telefone" },
-
     {
       label: "",
       render: (row) => (
@@ -45,17 +44,25 @@ export default function Story() {
     setIsOpen(!isopen);
   }
 
+  const saveToLocalStorage = (key, value) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
   useEffect(() => {
     axios
-      .get("http://assets.nelsys.vps-kinghost.net/json5.json")
+      .get("https://assets.nelsys.vps-kinghost.net/json5.json")
       .then((response) => {
+        console.log("response", response);
         setData(response.data.clientes);
         setFilteredData(response.data.clientes);
+        saveToLocalStorage("clientesData", response.data.clientes);
       })
       .catch((error) => {
         console.error("Erro ao buscar os dados:", error);
       });
   }, []);
+
+  useEffect(() => {});
 
   const columnVisibility = {
     showEmail: true,
@@ -109,7 +116,6 @@ export default function Story() {
   };
 
   const handleEdit = (cliente) => {
-    console.log("Cliente", cliente)
     setIsOpen(true);
     setSelectedClient(cliente);
   };
@@ -124,41 +130,43 @@ export default function Story() {
     <Stack spacing={1}>
       <GlobalStyle />
       <Header />
+
       <Stack
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            color: "white",
+            fontWeight: "bold",
+            fontSize: { xs: "15", md: "24px" },
+            background: "#035039",
+            display: "inline-block",
+            borderRadius: "10px",
+            padding: "4px 8px",
+            border: "solid white 1px",
           }}
         >
-          <Typography
-            sx={{
-              color: "white",
-              fontWeight: "bold",
-              fontSize: "24px",
-              background: "#035039",
-              display: "inline-block",
-              borderRadius: "10px",
-              padding: "4px 8px", 
-            }}
-          >
-            Dados Gerais
-          </Typography>
-          <Divider />
-        </Stack>
+          Dados Gerais
+        </Typography>
+        <Divider />
+      </Stack>
       <Divider />
       <Stack direction="row" justifyContent="flex-end">
         <Button
           sx={{
             background: "#2b5fc0",
-            fontSize: "12px",
+            fontSize: {xs:"10px", md:'15px'}  ,
             fontWeight: "bold",
             borderRadius: "12px",
             "&:hover": {
               background: "#0942ad",
             },
             width: {
-              md: "40%",
+              md: "20%",
               xs: "30%",
             },
           }}
@@ -212,7 +220,7 @@ export default function Story() {
                 },
                 width: {
                   xs: "100%",
-                  md: "70%",
+                  md: "100%",
                 },
               },
             }}
@@ -238,7 +246,7 @@ export default function Story() {
                 },
                 width: {
                   xs: "100%",
-                  md: "70%",
+                  md: "100%",
                 },
               },
             }}
@@ -264,7 +272,7 @@ export default function Story() {
                 },
                 width: {
                   xs: "100%",
-                  md: "70%",
+                  md: "100%",
                 },
               },
             }}
@@ -280,7 +288,7 @@ export default function Story() {
               background: "#024d36",
             },
             width: {
-              md: "40%",
+              md: "70%",
             },
           }}
           onClick={handlePesquisar}

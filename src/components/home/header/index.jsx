@@ -4,7 +4,15 @@ import Link from "next/link";
 
 export const Header = () => {
   return (
-    <Stack sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Stack
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        border:{ xs:"none", md:'1px solid black'},
+        borderRadius:"8px",
+        backgroundColor: { xs: "none", md: "#035039" },
+      }}
+    >
       <Box
         component="img"
         sx={{

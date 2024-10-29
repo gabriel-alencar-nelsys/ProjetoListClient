@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import { Header } from "./header/index";
 import Typography from "@mui/material/Typography";
-import { Divider, Card, CardContent, Grid } from "@mui/material";
+import { Divider, Card, CardContent, Grid, IconButton } from "@mui/material";
 import axios from "axios";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   LineChart,
   Line,
@@ -19,6 +20,7 @@ export const Initial = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -80,6 +82,12 @@ export const Initial = () => {
 
   return (
     <>
+      <IconButton
+        onclick={() => setIsDrawerOpen(true)}
+        sx={{ position: "fixed", top: 10, left: 10 }}
+      >
+        <MenuIcon sx={{color: 'white'}}/>
+      </IconButton>
       <Stack>
         <Header />
       </Stack>
@@ -95,97 +103,99 @@ export const Initial = () => {
             sx={{
               color: "white",
               fontWeight: "bold",
-              fontSize: "24px",
+              fontSize: { xs: "15px", md: "24px" },
               background: "#035039",
               display: "inline-block",
               borderRadius: "10px",
               padding: "4px 8px",
+              border: "solid white 1px",
             }}
           >
             Dashboard:
           </Typography>
           <Divider />
         </Stack>
-
-        <Grid
-          container
-          spacing={2}
-          justifyContent="center"
-          sx={{ marginBottom: 2 }}
-        >
-          <Grid item xs={6} sm={3}>
-            <Card
-              sx={{
-                backgroundColor: "#323238",
-                color: "#00B37E",
-                height: "100%",
-              }}
-            >
-              <CardContent>
-                <Typography variant="h6" align="center">
-                  Clientes
-                </Typography>
-                <Typography variant="h4" align="center">
-                  {totalClientes}
-                </Typography>
-              </CardContent>
-            </Card>
+        <Card sx={{ background: "#272626" }}>
+          <Grid
+            container
+            spacing={2}
+            justifyContent="center"
+            sx={{ marginBottom: 2 }}
+          >
+            <Grid item xs={6} sm={3}>
+              <Card
+                sx={{
+                  backgroundColor: "#323238",
+                  color: "#00B37E",
+                  height: "100%",
+                }}
+              >
+                <CardContent>
+                  <Typography variant="h6" align="center" color="white">
+                    Clientes
+                  </Typography>
+                  <Typography variant="h4" align="center">
+                    {totalClientes}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Card
+                sx={{
+                  backgroundColor: "#323238",
+                  color: "#00B37E",
+                  height: "100%",
+                }}
+              >
+                <CardContent>
+                  <Typography variant="h6" align="center" color="white">
+                    Pedidos
+                  </Typography>
+                  <Typography variant="h4" align="center">
+                    {totalPedidos}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Card
+                sx={{
+                  backgroundColor: "#323238",
+                  color: "#00B37E",
+                  height: "100%",
+                }}
+              >
+                <CardContent>
+                  <Typography variant="h6" align="center" color="white">
+                    Quantidade
+                  </Typography>
+                  <Typography variant="h4" align="center">
+                    {totalQuantidade}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Card
+                sx={{
+                  backgroundColor: "#323238",
+                  color: "#00B37E",
+                  height: "100%",
+                }}
+              >
+                <CardContent>
+                  <Typography variant="h6" align="center" color="white">
+                    Valor Total
+                  </Typography>
+                  <Typography variant="h4" align="center">
+                    R$ {totalValor.toFixed(2)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
-          <Grid item xs={6} sm={3}>
-            <Card
-              sx={{
-                backgroundColor: "#323238",
-                color: "#00B37E",
-                height: "100%",
-              }}
-            >
-              <CardContent>
-                <Typography variant="h6" align="center">
-                  Pedidos
-                </Typography>
-                <Typography variant="h4" align="center">
-                  {totalPedidos}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            <Card
-              sx={{
-                backgroundColor: "#323238",
-                color: "#00B37E",
-                height: "100%",
-              }}
-            >
-              <CardContent>
-                <Typography variant="h6" align="center">
-                  Quantidade
-                </Typography>
-                <Typography variant="h4" align="center">
-                  {totalQuantidade}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            <Card
-              sx={{
-                backgroundColor: "#323238",
-                color: "#00B37E",
-                height: "100%",
-              }}
-            >
-              <CardContent>
-                <Typography variant="h6" align="center">
-                  Valor Total
-                </Typography>
-                <Typography variant="h4" align="center">
-                  R$ {totalValor.toFixed(2)}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        </Card>
 
         <Stack sx={{ marginTop: 3 }}>
           <Typography

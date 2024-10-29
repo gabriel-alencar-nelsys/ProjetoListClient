@@ -110,7 +110,7 @@ const Detalhes = () => {
         component="img"
         src="/order.svg"
         sx={{
-          height: { xs: 100, md: 300 },
+          height: { xs: 200, md: 300 },
           width: "100%",
           transition: "transform 0.3s ease",
           "&:hover": {
@@ -137,13 +137,13 @@ const Detalhes = () => {
               </Box>
               <Divider />
 
-              <Accordion sx={{ maxWidth: "600px", margin: "0 auto", marginBottom: 2 }}>
+              <Accordion sx={{ maxWidth: "800px", margin: "0 auto", marginBottom: 2 }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1-content"
                   id="panel1-header"
                 >
-                  <Typography fontWeight={"bold"} variant="h6">
+                  <Typography fontWeight={"bold"} variant="h5">
                     Informações de Contato
                   </Typography>
                 </AccordionSummary>
@@ -156,13 +156,13 @@ const Detalhes = () => {
                 </AccordionDetails>
               </Accordion>
 
-              <Accordion sx={{ maxWidth: "600px", margin: "0 auto", marginBottom: 2 }}>
+              <Accordion sx={{ maxWidth: "800px", margin: "0 auto", marginBottom: 2 }}>
   <AccordionSummary
     expandIcon={<ExpandMoreIcon />}
     aria-controls="panel2-content"
     id="panel2-header"
   >
-    <Typography fontWeight={"bold"} variant="h6">
+    <Typography fontWeight={"bold"} variant="h5">
       Pedidos Realizados
     </Typography>
   </AccordionSummary>
@@ -211,13 +211,13 @@ const Detalhes = () => {
 </Accordion>
 
 
-              <Accordion sx={{ maxWidth: "600px", margin: "0 auto", marginBottom: 2 }}>
+              <Accordion sx={{ maxWidth: "800px", margin: "0 auto", marginBottom: 2 }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel3-content"
                   id="panel3-header"
                 >
-                  <Typography fontWeight={"bold"} variant="h6">
+                  <Typography fontWeight={"bold"} variant="h5">
                     Informações Adicionais
                   </Typography>
                 </AccordionSummary>
